@@ -5817,23 +5817,17 @@ sub align_pep_to_reference {
 	my $tmprefid = $refid;
 	$tmprefid =~ s/:/_/g;
 
-	open( TMP, ">$vigorspace/tmp_align_fasta.$pepid" )
-	  || die "Could not write to the tmp_align_fasta.$pepid file\.\n";
+	open( TMP, ">$vigorspace/tmp_align_fasta" )
+	  || die "Could not write to the tmp_align_fasta file\.\n";
 	print TMP ">$tmppepid\n$pepseq\n>$tmprefid\n$refseq\n";
 	close TMP;
 
 	my $alignment;
-	my $cmd = "clustalw -align -infile=$vigorspace/tmp_align_fasta.$pepid &> $vigorspace/tmp_align_fasta.log";
-        print " \n****\n Clustal command : \n $cmd \n****"; 
+	my $cmd = "clustalw -align -infile=$vigorspace/tmp_align_fasta &> $vigorspace/tmp_align_fasta.log";
+        print "\n @@@ \n $cmd \n @@@";
+        sleep(2);
 	if ( !system $cmd ) {
 		$alignment = `cat $vigorspace/tmp_align_fasta.aln`;
-                open FILE, "<$vigorspace/tmp_align_fasta.aln";
-                my $file_contents = do { local $/; <FILE> };
-                close FILE;
- 
-                print " \n@@@@\n Alignment file $vigorspace/tmp_align_fasta.aln --@@@@\n"; 
-                print " \n@@@@\n Alignments $file_contents --@@@@\n"; 
-
 		if ( $tmppepid ne $pepid ) {
 			$tmppepid =~ s/([\.\/\|\\])/\\$1/g;
 			$alignment =~ s/$tmppepid/$pepid/g;
@@ -5842,17 +5836,19 @@ sub align_pep_to_reference {
 			$tmprefid =~ s/(\W)/\\$1/g;
 			$alignment =~ s/$tmprefid/$refid/g;
 		}
-		$alignment =~ s/[\n\r\s]+$//; 
+		$alignment =~ s/[\n\r\s]+$//;
 #print "alignment $pepid vs $refid=\n$alignment\n";
 	}
 	else {
-        print " \n@@@@\n Alignment undefined \n @@@@\n"; 
 		$alignment = undef;
 	}
 
-	#unlink "$vigorspace/tmp_align_fasta.$pepid";
+	system("cp $vigorspace/tmp_align_fasta $vigorspace/tmp_align_fasta.$pepid");
+	system("cp $vigorspace/tmp_align_fasta.aln $vigorspace/tmp_align_fasta.aln.$pepid");
+	system("cp $vigorspace/tmp_align_fasta.log $vigorspace/tmp_align_fasta.log.$pepid");
+	unlink "$vigorspace/tmp_align_fasta";
 	unlink "$vigorspace/tmp_align_fasta.aln";
-	#unlink "$vigorspace/tmp_align_fasta.$pepid.log";
+	unlink "$vigorspace/tmp_align_fasta.log";
 
 	return $alignment;
 }
@@ -5862,7 +5858,7 @@ sub bl2seq_alignment {
 	my ( $genome, $gene, $bl2seqopts ) = @_;
 	my $vigorspace = get_parameter("vigorspace");
 
-	# get  sequence for extended gene span
+	# get sequence for extended gene span
 	my $genome_sequence = $$genome{sequence};
 	my $extend_span = 50;
 	my $detailed_exceptions = get_parameter("detailed_exceptions");

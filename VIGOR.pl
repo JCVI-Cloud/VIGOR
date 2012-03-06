@@ -351,8 +351,8 @@ if ( defined $FS ) { close $FS }
 
 my $retry = 0;
 my $vigorspace = get_parameter( "vigorspace" );
-while ( ( system "rm -rf $vigorspace" ) && $retry++ < 10 ) {
-	sleep 10;
-}
+#while ( ( system "rm -rf $vigorspace" ) && $retry++ < 10 ) {
+#	sleep 10;
+#}
 exit(0);
 
