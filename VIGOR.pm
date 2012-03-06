@@ -5825,6 +5825,7 @@ sub align_pep_to_reference {
 	my $alignment;
 	my $cmd = "clustalw -align -infile=$vigorspace/tmp_align_fasta &> $vigorspace/tmp_align_fasta.log";
 	if ( !system $cmd ) {
+        sleep(2);
 		$alignment = `cat $vigorspace/tmp_align_fasta.aln`;
 		if ( $tmppepid ne $pepid ) {
 			$tmppepid =~ s/([\.\/\|\\])/\\$1/g;
