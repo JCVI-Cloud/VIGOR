@@ -1,0 +1,47 @@
+parameter name	general default		comments
+allow_partial_genes	0		1=allow  0=do not allow
+allow_splicing	0		2=check defline (spliced=Y) 1=allow  0=do not allow
+candidate_blastopts	"-p blastx -e 1E-10 -v 0 -F """""		blast options to be used during  candidate region identification
+candidate_overlap_ismutual	0		"2=always mutual  1=mutual unless same gene  0=not mutual, mutual requires overlap of both regions to meet threshold"
+candidate_overlap_method	0		"1=hsp overlap  0=span overlap, equivalent if splicing is not allowed"
+candidate_overlap_threshold	0.8		"ratio required for overlap handling, fraction  of candidate on genome, when regions overlap in the same frame, the lower scoring region is discarded"
+candidate_refdb	 		"alternate blast database to be used during candidate region identification, by default the reference database is used"
+candidateref_clusterL	0.9		"cluster length requirement, fraction of length, see cluster_candidaterefs"
+candidateref_clusterS	80		"cluster identity requirement, percent identity, see cluster_candidaterefs"
+cluster_candidaterefs	0		"1=cluster  0=do not cluster, reference sequences can be clustered to produce an alternate blast db for candidate region identification, clustering can be useful for eliminating redundant regions resulting from highly similar reference sequences"
+detailed_exceptions	1		1=detailed exception messages  0=generic
+frameshift_detection	1		"1=detect  0=ignore, when HSPs overlap in different frames it is considered a sign of a potential frameshift, regions flagged as frameshifted are treated specially when attempting to identify the gene's CDS"
+hspmerge_blastopts	"-p blastx -e 0.01 -W 3 -P 1 -F """" -b 1 -v 0"		"when HSPs overlap in the same frame the regions are combined and reblasted, the highest scoring HSP is then used to replace the overlapping HSPs"
+ignore_strand	0		1=ignore strand  0=do not ingore
+mature_pep_blastopts	"-p blastp -e 100 -b 1000 -v 0 -F """""		"the mature peptide annotation module blasts polyproteins against a database of known viral mature peptides, see polyprotein_threshold"
+mature_pep_mincoverage	66		"minimum percent coverage of matpep reference, see polyprotein_threshold"
+mature_pep_minsimilarity	33		minimum percent similarity to matpep reference
+mature_pep_refdb	$myData/viruses.mature_peps		"blast database to be used by the mature peptide annotation module, see polyprotein_threshold"
+max_aa_gap	10		"HSPs separated by smaller or equal gap on  the reference peptide, and 3x on the genome are fused into a single HSP"
+max_generef_pcttrunc3	5		fail genes when the percentage of the reference peptide missing from the 3' end exceeds this value
+max_generef_pcttrunc5	5		fail genes when the percentage of the reference peptide missing from the 5' end exceeds this value
+max_intron_size	7000		"maximum allowed size for introns, ignored if splicing is not allowed"
+min_candidate_pctsimilarity	40		minimum percent similarity to reference sequence to be considered a candidate region
+min_candidate_sbjcoverage	50		minimum percent coverage of reference sequence to be considered a candidate region
+min_exon_size	3		"minimum allowed size for exons, ignored if splicing is not allowed"
+min_generef_pctcoverage	85		fail genes when the percent coverage of the reference peptide is below this value
+min_generef_pctidentity	50		fail genes when the percent identitical to the reference peptide is below this value
+min_generef_pctsimilarity	75		fail genes when the percent similarity to the reference peptide is below this value
+min_generef_pctsimilarity25	75		fail genes when the percent similarity to the 1st 25 bases of the reference peptide is below this value
+min_intron_size	100		"minimum allowed size for introns, ignored if splicing is not allowed"
+min_rawgene_pctsimilarity	50		"minimum percent similarity to reference sequence to be considered a candidate (""raw"") gene"
+min_rawgene_sbjcoverage	50		"minimum percent coverage of reference sequence to be considered a candidate (""raw"") gene"
+pep_bl2seqopts	"-p blastx -F \""\"" -e 1e-5 -d 3000000000"		bl2seq options to be used during generation of the alignment report
+polyprotein_threshold	999999		genes generating a peptide matching or exceeding this length will be automatically annotated by the mature peptide annotation module
+rawgene_extend_hsp	25		"number of bases to extend internal edges of candidate region before identification of candidate (""raw"") genes, ignored if splicing is not allowed"
+rawgene_extend_span	50		"number of bases to extend external edges of candidate region before identification of candidate (""raw"") genes"
+rawgene_overlap_threshold	0.8		"ratio required for overlap handling, fraction  of "raw" gene on genome, when "raw" genes overlap in the same frame, the lower scoring gene is discarded"
+rawgene_reblastopts	"-p blastx -e 1e-10 -b 20 -v 0 -F """""		"blast options to be used for identification of candidate (""raw"") genes in candidate region"
+reference_db	$myData/viral_refpep		reference database of peptide sequences used to be used to identify genes
+small_exon_autofind	0		"1=use small exon finder  0=do not use, if a small number of bases are missing from the 5' or 3' end of the candidate ""raw"" gene, use the autofinder to identify potential locations for a missing exon, ignored if splicing is not allowed"
+splicesite_search_range	100		"number of NA bases to range from edge of HSPs in search of splicing site, ignored if splicing is not allowed"
+startcodon_search_aarange	50%:50%		"upstream:downrange range from start of candidate (""raw"")  gene to be searched for start codon, as percentage of reference sequence length or number of amino acids"
+stop_codon_readthru			"allow an alternate stop codon by translating 1st stop codon as specified amino acid, if no AA specified 1st stop codon is used"
+stopcodon_search_aaextension	100%		"limit downstream extension of stop codon search, as percentage of reference sequence length or number of amino acids"
+tile_overlap	10000		"number of bases of overlap between consecutive tiles when the genome is broken into multiple tiles, see tile_size "
+tile_size	100000		"maximum length of genome to be blasted during candidate region identification, if the genome is longer it is broken into multiple tiles, the results from all of the tiles are merged before the candidates regions are selected"
